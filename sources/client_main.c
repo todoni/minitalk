@@ -1,55 +1,48 @@
 #include "../includes/minitalk.h"
 
-struct	sigaction	act_new;
-struct	sigaction	act_prev;
-
-struct	sigaction	act_sigusr1;
-struct	sigaction	act_sigusr1_prev;
-
-int		resting;
-
-void sigint_handler(int signo)
+void string_to_binary(char *msg, pid_t pid)
 {
+    int len;
+	int	val;
+	int	count;
 
-   ft_printf("Ctrl-C(SIGINT:%d) received!!\n", signo);
-   //printf("Press Ctrl-C again to terminate process.\n");
-   //sigaction(SIGINT, &act_prev, NULL);
-   //printf("You'll not see me anymore. bye. :(\n");
-   resting += 1;
-   resting *= -1;
+	len = ft_strlen(msg);
+	count = 0;
+    while(--len > -1)
+	{
+        // convert each char to
+        // ASCII value
+        val = msg[len]; 
+		ft_printf("count:%d\n", count);
+        // Convert ASCII value to binary
+        while (val > 0)
+        {
+            if (val % 2 != 0)
+			{
+				kill(pid, SIGUSR1);
+				usleep(200);
+			}
+			else
+			{
+				kill(pid, SIGUSR2);
+				usleep(200);
+			}
+            val /= 2;
+        }
+		count++;
+    }
 }
 
-void sigusr1_handler(int signo)
-{
-	ft_printf("sigusr1:%d signal\n", signo);
-}
-
-int main( void)
+int main(int argc, char **argv)
 {
 	pid_t	pid;
+	char	*message;
 
-	pid = getpid();
-	act_new.sa_handler = sigint_handler;
-	act_sigusr1.sa_handler = sigusr1_handler;
-	sigemptyset( &act_new.sa_mask);
-	sigemptyset(&act_sigusr1.sa_mask);
-	
-	ft_printf("pid: %d\n", pid);
-	sigaction( SIGINT, &act_new, &act_prev); 
-	sigaction(SIGUSR1, &act_sigusr1, &act_sigusr1_prev); 
-	kill(pid, SIGUSR1);
-	kill(pid, SIGUSR1);
-	while(!resting)
-	{
-		ft_printf( "running...\n");
-		sleep(1);
-	}
-	while(resting)
-	{
-		ft_printf("Well I'll go get some rest. Ho-hum\n");
-		pause();
-		ft_printf("Did you wake me up?\n");
-	}
-	ft_printf("bye\n");
+	if (argc <= 1)
+		ft_printf("Too few arguments. Usage: ./client [pid] [message]\n");
+	pid = ft_atoi(argv[1]);
+	message = argv[2];
+	ft_printf("server pid: %d\n", pid);
+	string_to_binary(message, pid);
 	return (0);
 }
