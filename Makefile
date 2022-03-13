@@ -14,15 +14,18 @@ INCLUDES_DIR = ./includes/
 LIBFTPF_INC_DIR = ./libftprintf/
 SOURCE_DIR = ./sources/
 OBJECT_DIR = objects
-FILES = \
-		main \
-		client \
-		server \
+SERVER_FILES = \
+		server_main \
+
+CLIENT_FILES = \
+		client_main \
 
 vpath %.c $(SOURCE_DIR)
 
-SOURCES = $(addprefix $(SOURCE_DIR), $(addsuffix .c, $(FILES)))
-OBJECTS = $(addprefix $(OBJECT_DIR)/, $(addsuffix .o, $(FILES)))
+SRC_CLIENT = $(addprefix $(SOURCE_DIR), $(addsuffix .c, $(CLIENT_FILES)))
+SRC_SERVER = $(addprefix $(SOURCE_DIR), $(addsuffix .c, $(SERVER_FILES)))
+OBJ_CLIENT = $(addprefix $(OBJECT_DIR)/, $(addsuffix .o, $(CLIENT_FILES)))
+OBJ_SERVER = $(addprefix $(OBJECT_DIR)/, $(addsuffix .o, $(SERVER_FILES)))
 
 CC = gcc
 CFLAGS = -Wall -Wextra -Werror
@@ -32,12 +35,19 @@ NAME = client server
 LIBFTPF = $(addprefix $(LIBFTPF_INC_DIR), libftprintf.a)
 
 
-all: $(NAME)
+all: $(LIBFTPF) $(NAME)
 
-$(NAME): $(OBJECT_DIR) $(OBJECTS) $(LIBFTPF)
-	$(CC) $(CFLAGS) $(LDFLAGS) -I$(INCLUDES_DIR) $(OBJECTS) -o $@
+#$(NAME): $(OBJECT_DIR) $(OBJECTS) $(LIBFTPF)
+#	$(CC) $(CFLAGS) $(LDFLAGS) -I$(INCLUDES_DIR) $(OBJECTS) -o $@
+
+client: $(OBJECT_DIR) $(OBJ_CLIENT)
+	$(CC) $(CFLAGS) $(LDFLAGS) -I$(INCLUDES_DIR) $(OBJ_CLIENT) -o $@
+	
+server: $(OBJECT_DIR) $(OBJ_SERVER)
+	$(CC) $(CFLAGS) $(LDFLAGS) -I$(INCLUDES_DIR) $(OBJ_SERVER) -o $@
 
 $(OBJECT_DIR):
+	@echo make object folder
 	@mkdir -p $(OBJECT_DIR)
 
 $(OBJECT_DIR)/%.o: %.c
