@@ -8,11 +8,11 @@ void string_to_binary(char *msg, pid_t pid)
 
 	len = ft_strlen(msg);
 	count = 0;
-    while(--len > -1)
+    while(count < len)
 	{
         // convert each char to
         // ASCII value
-        val = msg[len]; 
+        val = msg[count]; 
 		ft_printf("count:%d\n", count);
         // Convert ASCII value to binary
         while (val > 0)
