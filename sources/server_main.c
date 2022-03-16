@@ -9,7 +9,7 @@ void	sigusr1_handler(int signo)
 	g_s.binary |= 1;
 	++g_s.count;
 	signo = (int)signo;
-	ft_printf("[%d]usr1 : %d\n", g_s.count, g_s.binary);
+	//ft_printf("[%d]usr1 : %d\n", g_s.count, g_s.binary);
 }
 
 void	sigusr2_handler(int signo)
@@ -17,7 +17,7 @@ void	sigusr2_handler(int signo)
 	g_s.binary <<= 1;
 	++g_s.count;
 	signo = (int)signo;
-	ft_printf("[%d]usr2 : %d\n", g_s.count, g_s.binary);
+	//ft_printf("[%d]usr2 : %d\n", g_s.count, g_s.binary);
 }
 
 int	reverse(int	binary)
@@ -29,9 +29,9 @@ int	reverse(int	binary)
 
 	i = 0;
 	r = 0;
-	b = 64;
+	b = 128;
 	tmp = binary;
-	while (i < 7)
+	while (i < 8)
 	{
 		r += (tmp & 1) * b;
 		b /= 2;
@@ -41,13 +41,17 @@ int	reverse(int	binary)
 	return (r);
 }
 
+#include <time.h>
+#include <stdio.h>
+
 int main(void)
 {
 	pid_t	pid;
 	int		count;
 	struct sigaction	act_sigusr1;
 	struct sigaction	act_sigusr2;
-	
+	clock_t	start, end = 0;
+
 	pid = getpid();
 	count = 0;
 	ft_printf("server PID[%d]\n", pid);
@@ -57,15 +61,18 @@ int main(void)
 	sigemptyset(&act_sigusr2.sa_mask);
 	sigaction(SIGUSR1, &act_sigusr1, NULL);
 	sigaction(SIGUSR2, &act_sigusr2, NULL);
+	start = clock();
 	while (1)
 	{
 		pause();
 		//count = reverse(g_s.binary);
-		if (g_s.count && g_s.count % 7 == 0)
+		if (g_s.count && g_s.count % 8 == 0)
 		{
-			ft_printf("%c",reverse(g_s.binary));
+			ft_printf("%c",g_s.binary);
 			g_s.binary = 0;
 		}
 	}
+	end = clock();
+	printf("소요된 시간 : %.3f \n", (float)(end - start) / CLOCKS_PER_SEC);
 	return (0);
 }
