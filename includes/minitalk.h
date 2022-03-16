@@ -11,8 +11,4 @@ typedef struct s_server
 	int	count;
 }	t_server;
 
-void	sigint_handler(int signo);
-void	sigusr1_handler(int signo);
-void	display_pid();
-
 #endif
