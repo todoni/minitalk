@@ -7,8 +7,10 @@
 
 typedef struct s_server
 {
-	int	binary;
-	int	count;
+	unsigned char			binary;
+	char					message[4096];
+	unsigned long long int	count;
+	int						index;
 }	t_server;
 
 #endif
