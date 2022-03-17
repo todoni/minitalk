@@ -4,10 +4,6 @@ t_server	g_s;
 
 void	print_char_handler(int signo, siginfo_t *info, void *ucontext)
 {
-	g_s.binary <<= 1;
-	if (signo ==SIGUSR1)
-		g_s.binary |= 1;
-	++g_s.count;
 	(void)signo, (void)info, (void)ucontext;
 	if (g_s.count && g_s.count % 8 == 0)
 	{
@@ -15,7 +11,11 @@ void	print_char_handler(int signo, siginfo_t *info, void *ucontext)
 		g_s.binary = 0;
 		g_s.count = 0;
 	}
-	usleep(1);
+	g_s.binary <<= 1;
+	if (signo ==SIGUSR1)
+		g_s.binary |= 1;
+	++g_s.count;
+	//if ()
 	kill(info->si_pid, SIGUSR1);
 }
 
