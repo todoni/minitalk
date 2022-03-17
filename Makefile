@@ -42,8 +42,8 @@ LIBFTPF = $(addprefix $(LIBFTPF_INC_DIR), libftprintf.a)
 
 all: $(LIBFTPF) $(NAME)
 
-$(NAME): $(OBJECT_DIR) $(OBJECT_DIR)/$(NAME).o
-	$(CC) $(CFLAGS) $(LDFLAGS) -I$(INCLUDES_DIR) $(NAME).o -o $@
+$(NAME): $(OBJECT_DIR) $(OBJECTS)
+	$(CC) $(CFLAGS) $(LDFLAGS) -I$(INCLUDES_DIR) $</$@.o -o $@
 
 #client: $(OBJECT_DIR) $(OBJ_CLIENT)
 #	$(CC) $(CFLAGS) $(LDFLAGS) -I$(INCLUDES_DIR) $(OBJ_CLIENT) -o $@
