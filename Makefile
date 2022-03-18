@@ -14,23 +14,18 @@ INCLUDES_DIR = ./includes/
 LIBFTPF_INC_DIR = ./libftprintf/
 SOURCE_DIR = ./sources/
 OBJECT_DIR = objects
-SERVER_FILES = \
-		server \
-
-CLIENT_FILES = \
-		client \
-
 FILES = \
 		server \
 		client \
 
+FILES_BONUS = \
+		server_bonus \
+		client_bonus \
+
 vpath %.c $(SOURCE_DIR)
 
-SRC_CLIENT = $(addprefix $(SOURCE_DIR), $(addsuffix .c, $(CLIENT_FILES)))
-SRC_SERVER = $(addprefix $(SOURCE_DIR), $(addsuffix .c, $(SERVER_FILES)))
-OBJ_CLIENT = $(addprefix $(OBJECT_DIR)/, $(addsuffix .o, $(CLIENT_FILES)))
-OBJ_SERVER = $(addprefix $(OBJECT_DIR)/, $(addsuffix .o, $(SERVER_FILES)))
 OBJECTS = $(addprefix $(OBJECT_DIR)/, $(addsuffix .o, $(FILES)))
+OBJECTS_BONUS = $(addprefix $(OBJECT_DIR)/, $(addsuffix .o, $(FILES_BONUS)))
 
 CC = gcc
 CFLAGS = -Wall -Wextra -Werror
@@ -39,17 +34,18 @@ LDFLAGS = -Llibftprintf -lftprintf
 NAME = client server
 LIBFTPF = $(addprefix $(LIBFTPF_INC_DIR), libftprintf.a)
 
-
 all: $(LIBFTPF) $(NAME)
 
+bonus:
+	make BONUS=1 all
+
+ifdef BONUS
+$(NAME): $(OBJECT_DIR) $(OBJECTS_BONUS)
+	$(CC) $(CFLAGS) $(LDFLAGS) -I$(INCLUDES_DIR) $</$@_bonus.o -o $@
+else
 $(NAME): $(OBJECT_DIR) $(OBJECTS)
 	$(CC) $(CFLAGS) $(LDFLAGS) -I$(INCLUDES_DIR) $</$@.o -o $@
-
-#client: $(OBJECT_DIR) $(OBJ_CLIENT)
-#	$(CC) $(CFLAGS) $(LDFLAGS) -I$(INCLUDES_DIR) $(OBJ_CLIENT) -o $@
-	
-#server: $(OBJECT_DIR) $(OBJ_SERVER)
-#	$(CC) $(CFLAGS) $(LDFLAGS) -I$(INCLUDES_DIR) $(OBJ_SERVER) -o $@
+endif
 
 $(OBJECT_DIR):
 	@echo make object folder
@@ -72,4 +68,4 @@ fclean: clean
 
 re : fclean all
 
-.PHONY: all clean fclean re
+.PHONY: all clean fclean re bonus
