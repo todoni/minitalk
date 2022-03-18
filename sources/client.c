@@ -32,7 +32,8 @@ void	pong(int signo)
 
 int	main(int argc, char **argv)
 {
-	g_c.pid = ft_atoi(argv[1]);
+	if (argv[1])
+		g_c.pid = ft_atoi(argv[1]);
 	if (argc != 3 || g_c.pid == 0)
 	{
 		if (write(2, "Usage: ./client [pid] [message]\n", 32) == -1)
